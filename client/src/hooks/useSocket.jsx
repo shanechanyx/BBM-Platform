@@ -13,7 +13,9 @@ export function SocketProvider({ username, roomId, children }) {
 	})
 
 	useEffect(() => {
-		const url = import.meta.env.VITE_SOCKET_URL || 'http://localhost:4000'
+		// Auto-detect server URL in production (same origin), or use env var / localhost
+		const url = import.meta.env.VITE_SOCKET_URL || 
+			(import.meta.env.PROD ? window.location.origin : 'http://localhost:4000')
 		const socket = io(url, { transports: ['websocket'] })
 		socketRef.current = socket
 		socket.on('connect', () => setConnected(true))
